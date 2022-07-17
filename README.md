@@ -35,8 +35,80 @@
 
 ## **DB**
 
-- Tools : ERDCloud
+- Tools : [DBdiagram.io](http://DBdiagram.io) 사이트
+- Table
+  - users
+  - qt
+  - comments
+  - donation
+  - budget
+  - challenge
+  - orders
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5f1e84c0-d4ec-4822-b7c2-6c26131d3d34/Untitled.png)
 
 ## **시스템 구조도**
 
+![system.drawio (1).png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b5652bc9-bd2b-46d6-b053-29c6c49e6c4c/system.drawio_(1).png)
+
 ## **서비스 구조도**
+
+## 환경
+
+- flask web framework
+- react
+- dns
+
+## 환경 설정
+
+- python venv
+
+```jsx
+python -m venv venv
+```
+
+- venv python 가상환경 실행
+
+  ```jsx
+  source venv/Scripts/activate
+  ```
+
+- requirements.txt
+
+  - 생성명령어
+
+  ```jsx
+  pip freeze > requirements.txt
+  ```
+
+  - 필요항목 인스톨
+
+  ```jsx
+  pip install -r requirements.txt
+  ```
+
+![db 구조](./images/db 구조.png)
+
+- 설치 패키지 목록
+
+  ```jsx
+  pip install Flask
+  ```
+
+- mariadb
+
+  ```jsx
+  pip install mariadb SQLAlchemy
+  ```
+
+- dbms
+
+  ```jsx
+  pip install mysql-connector-python
+  ```
+
+- flask-marshmallow
+
+![시스템 구조](./images/시스템 구조.png)
+
+- flask-restx

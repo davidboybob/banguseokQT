@@ -27,8 +27,10 @@ def create_app():
 
     
     from api.user_controller import api as user_namespace
+    from api.qt_controller import api as qt_namespace
 
     api.add_namespace(user_namespace, path='/user')
+    api.add_namespace(qt_namespace, path='/qt')
 
     # app.config.from_object(Config)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + Config.dbfile + "?charset=utf-8"

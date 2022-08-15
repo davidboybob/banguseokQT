@@ -5,10 +5,10 @@ from app import flask_bcrypt
 
 db = SQLAlchemy()
 
-# Many to Many => User : Challenge = M : M
+# Many to Many => User : Challenges = M : M
 orders = db.Table('orders',
             db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
-            db.Column('challenge_id', db.Integer, db.ForeignKey('challenge.id')),
+            db.Column('challenges_id', db.Integer, db.ForeignKey('challenges.id')),
             db.Column('achivement_rate', db.Float)
         )
     
@@ -23,7 +23,7 @@ class User(db.Model):
     own_donations_mount = db.Column(db.Integer, default=0)
     password_hash = db.Column(db.String(128), nullable=False)
     public_id = db.Column(db.String(128), unique=True)
-    create_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     
     # qt : user = N : 1
@@ -32,8 +32,8 @@ class User(db.Model):
     # comments : User = N : 1
     comments_id = db.relationship('Comments', backref='user', lazy=True)
 
-    # challenge : user = M : M 
-    challenges = db.relationship('Challenge', secondary=orders, lazy='subquery',
+    # challenges : user = M : M 
+    challenges_id = db.relationship('Challenges', secondary=orders, lazy='subquery',
                                     backref=db.backref('users', lazy=True)
                                 )
 
@@ -51,27 +51,32 @@ class User(db.Model):
     def verify_password(self, password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
-    def __init__(self, 
+    def __init__(self,
+                # id,
                 name, 
                 email,
                 password,
-                public_id):
-                #own_donations_mount, 
-                #create_at, updated_at, 
-                #commnets_id, 
-                #challenges, 
-                #donation_id):
+                public_id,
+                own_donations_mount, 
+                created_at, 
+                updated_at,
+                qt_id,
+                # commnets_id, 
+                # challenges_id, 
+                # donation_id,
+                ):
+        # self.id = id
         self.name = name
         self.email = email
         self.password = password
         self.public_id = public_id
-        # self.own_donations_mount = own_donations_mount
-        # self.create_at = create_at
-        # self.updated_at = updated_at
+        self.own_donations_mount = own_donations_mount
+        self.created_at = created_at
+        self.updated_at = updated_at
+        self.qt_id = qt_id
         # self.comments_id = commnets_id
-        # self.challenges = challenges
+        # self.challenges_id = challenges_id
         # self.donation_id = donation_id
-
 
 
     def __repr__(self):
@@ -94,8 +99,29 @@ class Qt(db.Model):
     # comments : qt = N : 1
     comments_id = db.relationship('Comments', backref='qt', lazy=True)
 
-    # challenge : qt = 1 : N
-    challenge_id = db.Column(db.Integer, db.ForeignKey('challenge.id')) #, nullable=False)
+    # challenges : qt = 1 : N
+    challenges_id = db.Column(db.Integer, db.ForeignKey('challenges.id')) #, nullable=False)
+
+    def __init__(self,
+                # id,
+                blog_url,
+                title,
+                contents):
+                # created_at,
+                # updated_at,
+                # user_id,
+                # comments_id,
+                # challenges_id):
+        # self.id = id
+        self.blog_url = blog_url
+        self.title = title
+        self.contents = contents
+        # self.created_at = created_at
+        # self.updated_at = updated_at
+        # self.user_id = user_id
+        # self.comments_id = comments_id
+        # self.challenges_id = challenges_id
+
 
     def __repr__(self):
         return '<Qt %r>' %self.title
@@ -119,8 +145,8 @@ class Comments(db.Model):
         return '<Comments %r>' %self.contents
 
 
-class Challenge(db.Model):
-    __tablename__ = 'challenge'
+class Challenges(db.Model):
+    __tablename__ = 'challenges'
 
     id = db.Column(db.Integer, primary_key=True)
     state = db.Column(db.Boolean, default=False) # state 추가하기 
@@ -131,14 +157,14 @@ class Challenge(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
-    # challenge : qt = 1 : N
-    qt_id = db.relationship('Qt', backref='challenge', lazy=True)
+    # challenges : qt = 1 : N
+    qt_id = db.relationship('Qt', backref='challenges', lazy=True)
 
-    # challenge : budget = N : 1
+    # challenges : budget = N : 1
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))
 
     def __repr__(self):
-        return '<Challenge %r>' %self.title
+        return '<Challenges %r>' %self.title
 
 
 class Budget(db.Model):
@@ -149,8 +175,8 @@ class Budget(db.Model):
     # donation : budget = N : 1
     donation_id = db.relationship('Donation', backref='budget',lazy=True)
 
-    # challenge : budget = N : 1
-    challenge_id = db.relationship('Challenge', backref='budget', lazy=True)
+    # challenges : budget = N : 1
+    challenges_id = db.relationship('Challenges', backref='budget', lazy=True)
 
 
     def __repr__(self):

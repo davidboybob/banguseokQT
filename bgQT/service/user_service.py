@@ -7,6 +7,10 @@ def save_changes(data):
     db.session.add(data)
     db.session.commit()
 
+def delete_data(data):
+    db.session.delete(data)
+    db.session.commit()
+
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     
@@ -18,7 +22,7 @@ def save_new_user(data):
                 name = data['name'],
                 password = data['password']
             )
-            print(new_user)
+            # print(new_user)
             save_changes(new_user)
             response_object = {
                 'status': 'success',
@@ -37,9 +41,25 @@ def save_new_user(data):
 
 
 def get_all_users():
-    print(User.query.all())
+    # print(User.query.all())
     return User.query.all()
 
 
-def get_a_user(id):
-    return User.query.filter_by(id=id).first()
+def get_a_user(public_id):
+    return User.query.filter_by(public_id=public_id).first()
+
+def delete_a_user(public_id):
+    user = User.query.filter_by(public_id=public_id).first()
+    # user = User.query.get(public_id)
+
+    # Password 확인 절차 필요
+    delete_a_user(user)
+
+    response_object = {
+        'status': 'success',
+        'message': 'Successfully deleted.'
+    }
+
+    return response_object, 204
+    
+    # return User.query.

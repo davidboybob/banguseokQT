@@ -1,12 +1,12 @@
 from flask_restx import Namespace, fields
 
-# class UserQtSchema:
-#     api = Namespace(name='userqtschema', description='User에서 qt를 참조하는 데이터 API')
-#     userqtschema = api.model(
-#         'userqtschema',
-#         {'qt_id': fields.List(fields.Integer)}
+class UserQtSchema:
+    api = Namespace(name='userqtschema', description='User에서 qt를 참조하는 데이터 API')
+    userqtschema = api.model(
+        'userqtschema',
+        {'qt_id': fields.List(fields.Integer)}
         
-#     )
+    )
 
 class UserDto:
     api = Namespace(name='user', description='User 정보 관련 API')
@@ -19,9 +19,10 @@ class UserDto:
             'password': fields.String(required=True, description="사용자 암호화된 비밀번호"),
             'public_id': fields.String(description="사용자 Identifier(Id)"),
             'own_donations_mount': fields.Integer(description="사용자 후원금"),
-            'create_at': fields.DateTime(description="사용자 생성 일자"),
+            'created_at': fields.DateTime(description="사용자 생성 일자"),
             'updated_at': fields.DateTime(description="사용자 생성 일자"),
-            # 'qt_id': fields.Nested(UserQtSchema.userqtschema),
+            # 'qt_id': fields.List(fields.Nested(QtDto.qt))
+            'qt_id': fields.Nested(UserQtSchema.userqtschema),
             # 'commnets_id': fields.List(fields.Integer, description="Relationship of comments_id"),
             # 'challenges_id': fields.List(fields.Integer, description="Relationship of challenges"),
             # 'donation_id': fields.List(fields.Integer, description="Relationship of donation_id"),
@@ -37,11 +38,12 @@ class QtDto:
             'blog_url': fields.String(description="블로그 URL"),
             'title': fields.String(description="QT 제목"),
             'contents': fields.String(description="QT 내용"),
-            'user_id': fields.Nested(UserDto.user)
+            'user_id': fields.List(fields.Nested(UserDto.user))
         }
     )
+    # print(UserDto.user.get('name'))
 
-class CommentsDtop:
+class CommentsDto:
     api = Namespace(name='comments', description="댓글 관련 API")
     comments = api.model(
         'comments',

@@ -51,32 +51,37 @@ class User(db.Model):
     def verify_password(self, password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
-    def __init__(self,
-                # id,
-                name, 
-                email,
-                password,
-                public_id,
-                own_donations_mount, 
-                created_at, 
-                updated_at,
-                qt_id,
-                # commnets_id, 
-                # challenges_id, 
-                # donation_id,
-                ):
-        # self.id = id
-        self.name = name
-        self.email = email
-        self.password = password
-        self.public_id = public_id
-        self.own_donations_mount = own_donations_mount
-        self.created_at = created_at
-        self.updated_at = updated_at
-        self.qt_id = qt_id
-        # self.comments_id = commnets_id
-        # self.challenges_id = challenges_id
-        # self.donation_id = donation_id
+    # def __init__(self,
+    #             # id,
+    #             name, 
+    #             email,
+    #             password,
+    #             public_id,
+    #             **kwargs,
+    #             # own_donations_mount, 
+    #             # created_at, 
+    #             # updated_at,
+    #             # qt_id,
+    #             # commnets_id, 
+    #             # challenges_id, 
+    #             # donation_id,
+    #             ):
+    #     # self.id = id
+    #     self.name = name
+    #     self.email = email
+    #     self.password = password
+    #     self.public_id = public_id
+    #     print("==============testsetset")
+    #     print(**kwargs)
+    #     for key, value in kwargs.items():
+    #         print(key, value)
+    #     # self.own_donations_mount = own_donations_mount
+    #     # self.created_at = created_at
+    #     # self.updated_at = updated_at
+    #     # self.qt_id = qt_id
+    #     # self.comments_id = commnets_id
+    #     # self.challenges_id = challenges_id
+    #     # self.donation_id = donation_id
 
 
     def __repr__(self):
@@ -87,7 +92,7 @@ class Qt(db.Model):
     __tablename__ = 'qt'
 
     id = db.Column(db.Integer, primary_key=True)
-    blog_url = db.Column(db.Boolean, default=True)
+    blog_url = db.Column(db.String(256), default=True)
     title = db.Column(db.String(256))
     contents = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -102,25 +107,25 @@ class Qt(db.Model):
     # challenges : qt = 1 : N
     challenges_id = db.Column(db.Integer, db.ForeignKey('challenges.id')) #, nullable=False)
 
-    def __init__(self,
-                # id,
-                blog_url,
-                title,
-                contents):
-                # created_at,
-                # updated_at,
-                # user_id,
-                # comments_id,
-                # challenges_id):
-        # self.id = id
-        self.blog_url = blog_url
-        self.title = title
-        self.contents = contents
-        # self.created_at = created_at
-        # self.updated_at = updated_at
-        # self.user_id = user_id
-        # self.comments_id = comments_id
-        # self.challenges_id = challenges_id
+    # def __init__(self,
+    #             # id,
+    #             blog_url,
+    #             title,
+    #             contents):
+    #             # created_at,
+    #             # updated_at,
+    #             # user_id,
+    #             # comments_id,
+    #             # challenges_id):
+    #     # self.id = id
+    #     self.blog_url = blog_url
+    #     self.title = title
+    #     self.contents = contents
+    #     # self.created_at = created_at
+    #     # self.updated_at = updated_at
+    #     # self.user_id = user_id
+    #     # self.comments_id = comments_id
+    #     # self.challenges_id = challenges_id
 
 
     def __repr__(self):

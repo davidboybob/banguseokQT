@@ -3,19 +3,23 @@ import uuid
 from models.models import db
 from models.models import User
 
+
 def save_changes(data):
     db.session.add(data)
     db.session.commit()
 
+
 def delete_data(data):
     db.session.delete(data)
     db.session.commit()
+
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     
     try:
         if not user:
+            # print("============test================")
             new_user = User(
                 public_id = str(uuid.uuid4()),
                 email = data['email'],
@@ -47,6 +51,7 @@ def get_all_users():
 
 def get_a_user(public_id):
     return User.query.filter_by(public_id=public_id).first()
+
 
 def delete_a_user(public_id):
     user = User.query.filter_by(public_id=public_id).first()

@@ -28,9 +28,17 @@ def create_app():
     
     from api.user_controller import api as user_namespace
     from api.qt_controller import api as qt_namespace
+    from api.comments_controller import api as comments_namespace
+    from api.challenges_controller import api as challenges_namespace
+    from api.budget_controller import api as budget_namespace
+    from api.donation_controller import api as donation_namespace
 
     api.add_namespace(user_namespace, path='/user')
     api.add_namespace(qt_namespace, path='/qt')
+    api.add_namespace(comments_namespace, path='/comments')
+    api.add_namespace(challenges_namespace, path='/challenges')
+    api.add_namespace(budget_namespace, path='/budget')
+    api.add_namespace(donation_namespace, path='/donation')
 
     # app.config.from_object(Config)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + Config.dbfile + "?charset=utf-8"

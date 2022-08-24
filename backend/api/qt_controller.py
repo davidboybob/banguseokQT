@@ -21,7 +21,7 @@ class QtList(Resource):
     def post(self):
         """Create a new qt"""
         data = request.json
-
+        # print(data)
         return save_new_qt(data=data)
 
 

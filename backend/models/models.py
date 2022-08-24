@@ -162,6 +162,11 @@ class Challenges(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
+    # challengs : user = M : M
+    user_id = db.relationship('User', secondary=orders, lazy='subquery',
+                                    backref=db.backref('challenges', lazy=True))
+
+
     # challenges : qt = 1 : N
     qt_id = db.relationship('Qt', backref='challenges', lazy=True)
 

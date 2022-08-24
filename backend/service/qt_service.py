@@ -1,6 +1,3 @@
-from urllib import response
-import uuid
-
 from models.models import db
 from models.models import Qt
 

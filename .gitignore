@@ -2,7 +2,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,flask,reactnative
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,flask,reactnative
 
-pybo_example/`
+pybo_example/*
 
 config.py
 ### Flask ###

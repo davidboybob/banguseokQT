@@ -45,11 +45,11 @@
   - challenge
   - orders
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/5f1e84c0-d4ec-4822-b7c2-6c26131d3d34/Untitled.png)
+![db](./images/db_structure.png)
 
 ## **시스템 구조도**
 
-![system.drawio (1).png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b5652bc9-bd2b-46d6-b053-29c6c49e6c4c/system.drawio_(1).png)
+![system](./images/system_structure.png)
 
 ## **서비스 구조도**
 

@@ -50,9 +50,13 @@ npm install -g create-react-app
 - create-react-app 첫 프로젝트 만들기
 
 ```
+# root 경로에서 실행
+
 # craetae-react-app (proejct-name)
 
-# craetae-react-app frontend
+# craetae-react-app frontend => javascript
+
+# npx create-react-app my-app --template typescript => typescript
 
 디렉토리 구조
 (project-naem)
@@ -93,5 +97,34 @@ npm install -g create-react-app
 # Test 나누기
 ```
 
-- 
+- react tool 설치
+```
+# react-router-dom
 
+# npx create-react-app frontend --template typescript
+
+1. npm install react-router-dom
+  npm install --save react-router-dom
+  npm install --save-dev @types/react-router-dom
+2. yarn add react-router-dom
+
+```
+
+```
+# react-redux
+
+1. npx create-react-app frontend --template redux-typescript
+2. (existing react app)  npm install react-redux or yarn add react-redux
+```
+
+- mui 설치
+```
+# Please note that react >= 17.0.0 and react-dom >= 17.0.0 are peer dependencies.
+
+npm install @mui/material @emotion/react @emotion/styled
+```
+
+- styled-components
+```
+
+```

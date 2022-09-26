@@ -45,7 +45,7 @@ def save_new_user(data):
 
 
 def get_all_users():
-    # print(User.query.all())
+    print(User.query.all())
     return User.query.all()
 
 

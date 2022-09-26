@@ -1,7 +1,7 @@
 from statistics import mode
 from flask import Blueprint, Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from config import Config
+from config import config
 from flask_restx import Api, Resource
 from flask_bcrypt import Bcrypt
 
@@ -33,19 +33,21 @@ def create_app():
     from api.budget_controller import api as budget_namespace
     from api.donation_controller import api as donation_namespace
 
-    api.add_namespace(user_namespace, path='/user')
-    api.add_namespace(qt_namespace, path='/qt')
-    api.add_namespace(comments_namespace, path='/comments')
-    api.add_namespace(challenges_namespace, path='/challenges')
-    api.add_namespace(budget_namespace, path='/budget')
-    api.add_namespace(donation_namespace, path='/donation')
+    base_api = "/api/v1"
+
+    api.add_namespace(user_namespace, path='%s/user' %base_api)
+    api.add_namespace(qt_namespace, path='%s/qt' %base_api)
+    api.add_namespace(comments_namespace, path='%s/comments' %base_api)
+    api.add_namespace(challenges_namespace, path='%s/challenges' %base_api)
+    api.add_namespace(budget_namespace, path='%s/budget' %base_api)
+    api.add_namespace(donation_namespace, path='%s/donation' %base_api)
 
     # app.config.from_object(Config)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + Config.dbfile + "?charset=utf-8"
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + config.Config.dbfile + "?charset=utf-8"
     # print(app.config)
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = Config.secret_key
+    app.config['SECRET_KEY'] = config.Config.secret_key
 
     # DB 만들기
     from models import models

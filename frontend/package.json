@@ -20,6 +20,7 @@
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
     "@types/react-redux": "^7.1.24",
+    "axios": "^0.27.2",
     "nprogress": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -57,5 +58,6 @@
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.0"
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

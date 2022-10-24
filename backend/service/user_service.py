@@ -19,14 +19,13 @@ def save_new_user(data):
     
     try:
         if not user:
-            # print("============test================")
             new_user = User(
                 public_id = str(uuid.uuid4()),
                 email = data['email'],
                 name = data['name'],
                 password = data['password']
             )
-            # print(new_user)
+
             save_changes(new_user)
             response_object = {
                 'status': 'success',
@@ -68,3 +67,20 @@ def delete_a_user(public_id):
     return response_object, 204
     
     # return User.query.
+
+def generate_token(user):
+    try:
+        # generate the auth token 
+        auth_token = user.encode_auth_token(user.id)
+        response_object = {
+            'status': 'success',
+            'message': 'Successfully registered.',
+            'Authorization': auth_token
+        }
+        return response_object, 201
+    except Exception as err:
+        response_object = {
+            'status': 'fail',
+            'message': 'Some error occurred. Please try again.'
+        }
+        return response_object, 401

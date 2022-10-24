@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { PropsWithChildren, ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
@@ -93,7 +94,11 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-function BaseLayout() {
+interface BaseLayoutProps {
+  children?: ReactNode;
+}
+
+const BaseLayout = ({ children }: PropsWithChildren<BaseLayoutProps>) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -188,7 +193,7 @@ function BaseLayout() {
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
 
-        <Outlet />
+        {children || <Outlet />}
 
       </Box>
     </Box>

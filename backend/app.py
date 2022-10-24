@@ -5,6 +5,7 @@ from config import config
 from flask_restx import Api, Resource
 from flask_bcrypt import Bcrypt
 
+from flask_cors import CORS
 
 # db = SQLAlchemy()
 flask_bcrypt = Bcrypt()
@@ -12,6 +13,7 @@ flask_bcrypt = Bcrypt()
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
     api_blueprint = Blueprint('api', __name__)
     # flask-restx 
     
@@ -32,6 +34,7 @@ def create_app():
     from api.challenges_controller import api as challenges_namespace
     from api.budget_controller import api as budget_namespace
     from api.donation_controller import api as donation_namespace
+    from api.auth_controller import api as auth_namespace
 
     base_api = "/api/v1"
 
@@ -41,13 +44,14 @@ def create_app():
     api.add_namespace(challenges_namespace, path='%s/challenges' %base_api)
     api.add_namespace(budget_namespace, path='%s/budget' %base_api)
     api.add_namespace(donation_namespace, path='%s/donation' %base_api)
+    api.add_namespace(auth_namespace)
 
     # app.config.from_object(Config)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + config.Config.dbfile + "?charset=utf-8"
     # print(app.config)
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = config.Config.secret_key
+    app.config['SECRET_KEY'] = config.Config.SECRET_KEY
 
     # DB 만들기
     from models import models
@@ -101,5 +105,6 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    CORS(app)
+    app.run(host='0.0.0.0', port=5001, debug=True)
      

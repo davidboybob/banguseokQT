@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
-
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 import { useAppDistpatch, useAppSelector } from 'app/hooks';
 import { useEffect } from 'react';
@@ -8,25 +6,57 @@ import { fetchGetUserInfo } from 'features/users/fetchUserInfo';
 import { selectUserInfo } from 'features/users/userInfoSlice';
 import { UserInfo } from 'features/users/userInfoTypes';
 
+import UserInfoData from 'components/userInfo';
+import CurrentStatusBoard from 'components/Dashboard/CurrentStatusBoard';
+import MyQTBoard from "components/Dashboard/MyQTBoard";
 
 function DashBoard() {
   const dispatch = useAppDistpatch();
+  const usersInfo = useAppSelector(selectUserInfo)
+  const userStatus = useAppSelector((state) => state.userInfo.status);
 
   useEffect(() => {
     dispatch(fetchGetUserInfo({}));
   }, []);
-
-  const usersInfo = useAppSelector(selectUserInfo)
-  const userStatus = useAppSelector((state) => state.userInfo.status);
-
   console.log(usersInfo)
   return (
-    <Box>
-      {userStatus === 'loading' ? (
+    <Box sx={{ width: '100%' }}>
+      {/* {userStatus === 'loading' ? (
         "Loading..."
       ) : (
-        "test"
-      )}
+        <>
+          {usersInfo.map((value: any, index: any) => `${value.data[`${index}`]['email']}`)}
+        </>
+        // <UserInfoData userInfo={usersInfo} />
+      )} */}
+
+      <Grid
+        container
+        direction="row"
+        rowSpacing={2}
+        columnSpacing={{
+          mobile: 1,
+          tablet: 2,
+          desktop: 3
+        }}
+        justifyContent="center"
+        alignItems="stretch"
+        sx={{ minHeight: "300px" }}
+      >
+        <Grid item mobile={4} >
+          <CurrentStatusBoard />
+        </Grid>
+        <Grid item mobile={8}>
+          <MyQTBoard />
+        </Grid>
+        <Grid item mobile={4}>
+          진행 중인 챌린지
+        </Grid>
+        <Grid item mobile={8}>
+          댓글
+        </Grid>
+
+      </Grid>
     </Box>
   );
 }

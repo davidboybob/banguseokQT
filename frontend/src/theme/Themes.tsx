@@ -1,11 +1,22 @@
 import { createTheme } from '@mui/material/styles';
 import { yellow } from '@mui/material/colors';
 
+declare module '@mui/material/styles/createPalette' {
+
+  interface PaletteOptions {
+    custom: { main: string };
+  }
+}
+
+
 
 declare module '@mui/material/styles' {
   interface Theme {
     color: {
       primary: {
+        main: string;
+      },
+      custom: {
         main: string;
       }
     }
@@ -30,7 +41,10 @@ export const theme = createTheme({
   },
   palette: {
     primary: {
-      main: yellow[500],
+      main: yellow[500]
+    },
+    custom: {
+      main: yellow[100]
     }
   },
   breakpoints: {
@@ -41,4 +55,14 @@ export const theme = createTheme({
       desktop: 1200,
     },
   },
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          minHeight: '300px',
+          borderRadius: 10,
+        },
+      }
+    }
+  }
 })

@@ -11,6 +11,10 @@ const Loader = (Component: any) => (props: any) => (
   </Suspense>
 )
 
+// SignIn, SignUp 
+const SignBaseLayout = Loader(lazy(() => import('layouts/SignBaseLayout')))
+const SignUpLayout = Loader(lazy(() => import('layouts/SignUpLayout')))
+
 // DashBoard (Main page)
 const DashBoard = Loader(lazy(() => import('content/DashBoard')))
 
@@ -21,10 +25,26 @@ const routes: RouteObject[] = [
     children: [
       {
         path: '/',
-        element: <DashBoard />
+        element: <Navigate to='login' replace />
+      },
+      {
+        path: '/dashboard',
+        element: <DashBoard />,
       }
     ]
+  },
+  {
+    path: '/login',
+    element: <SignBaseLayout />,
+    children: [
+
+    ]
+  },
+  {
+    path: '/signup',
+    element: <SignUpLayout />,
   }
+
 ]
 
 

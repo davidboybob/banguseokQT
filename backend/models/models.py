@@ -1,7 +1,11 @@
+# coding: utf-8
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
 from app import flask_bcrypt
+from config.config import key
+import jwt
+import datetime
 
 db = SQLAlchemy()
 
@@ -11,21 +15,22 @@ orders = db.Table('orders',
             db.Column('challenges_id', db.Integer, db.ForeignKey('challenges.id')),
             db.Column('achivement_rate', db.Float)
         )
-    
+
 
 class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    # user_id = db.Column(db.String(32), unique=True, nullable=False)
-    email = db.Column(db.String(128), unique=True, nullable=False)
     name = db.Column(db.String(10), nullable=False)
+    email = db.Column(db.String(128), unique=True, nullable=False)
     own_donations_mount = db.Column(db.Integer, default=0)
     password_hash = db.Column(db.String(128), nullable=False)
     public_id = db.Column(db.String(128), unique=True)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
     updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     
+    admin = db.Column(db.Boolean, nullable=False, default=False)
+
     # qt : user = N : 1
     qt_id = db.relationship('Qt', backref='user', lazy=True)
 
@@ -48,41 +53,27 @@ class User(db.Model):
     def password(self, password):
         self.password_hash = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
-    def verify_password(self, password):
+    def check_password(self, password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
-    # def __init__(self,
-    #             # id,
-    #             name, 
-    #             email,
-    #             password,
-    #             public_id,
-    #             **kwargs,
-    #             # own_donations_mount, 
-    #             # created_at, 
-    #             # updated_at,
-    #             # qt_id,
-    #             # commnets_id, 
-    #             # challenges_id, 
-    #             # donation_id,
-    #             ):
-    #     # self.id = id
-    #     self.name = name
-    #     self.email = email
-    #     self.password = password
-    #     self.public_id = public_id
-    #     print("==============testsetset")
-    #     print(**kwargs)
-    #     for key, value in kwargs.items():
-    #         print(key, value)
-    #     # self.own_donations_mount = own_donations_mount
-    #     # self.created_at = created_at
-    #     # self.updated_at = updated_at
-    #     # self.qt_id = qt_id
-    #     # self.comments_id = commnets_id
-    #     # self.challenges_id = challenges_id
-    #     # self.donation_id = donation_id
-
+    def encode_auth_token(self, user_id):
+        """
+        Generates the Auth Token
+        :return: string
+        """
+        try:
+            payload = {
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
+                'iat': datetime.datetime.utcnow(),
+                'sub': user_id
+            }
+            return jwt.encode(
+                payload,
+                key,
+                algorithm='HS256'
+            )
+        except Exception as err:
+            return err
 
     def __repr__(self):
         return '<User %r>' %self.name
@@ -164,7 +155,7 @@ class Challenges(db.Model):
 
     # challengs : user = M : M
     user_id = db.relationship('User', secondary=orders, lazy='subquery',
-                                    backref=db.backref('challenges', lazy=True))
+                                    backref=db.backref('challenges', lazy=True, overlaps="challenges_id,users"), overlaps="challenges_id,users")
 
 
     # challenges : qt = 1 : N

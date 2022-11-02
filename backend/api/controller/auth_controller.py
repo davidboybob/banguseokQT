@@ -1,7 +1,9 @@
+from venv import create
 from flask import request
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from flask_restx import Resource
 
-from service.auth_helper_service import Auth
+from api.service.auth_service import Auth
 from utils.dto import AuthDto
 
 api = AuthDto.api
@@ -15,7 +17,11 @@ class UserLogin(Resource):
     @api.doc('user login')
     @api.expect(_auth, validate=True)
     def post(self):
+        """
+        Login
+        """
         post_data = request.json
+        
         return Auth.login_user(data=post_data)
 
 
@@ -29,3 +35,14 @@ class LogoutAPI(Resource):
         # get auth token
         auth_header = request.headers.get('Authorization')
         return Auth.logout_user(data=auth_header)
+
+
+@api.route('/protected')
+class RefreshTokenProtected(Resource):
+    @jwt_required()
+    def get(self):
+        """
+        check the validator of refresh token.
+        """
+        current_user_id = get_jwt_identity()
+        return 

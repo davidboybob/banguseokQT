@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
 from app import flask_bcrypt
-from config.config import key
+from config.config import CONFIG
 import jwt
 import datetime
 
@@ -45,35 +45,23 @@ class User(db.Model):
     # donation : User = N : 1
     donation_id = db.relationship('Donation', backref='user', lazy=True)
 
+    # refresh_token : User = N : 1
+    refresh_id = db.relationship('RefreshToken', backref='user', lazy=True)
+
+
     @property
     def password(self):
         raise AttributeError('password is not readable attribute!')
+
 
     @password.setter
     def password(self, password):
         self.password_hash = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
+
     def check_password(self, password):
         return flask_bcrypt.check_password_hash(self.password_hash, password)
 
-    def encode_auth_token(self, user_id):
-        """
-        Generates the Auth Token
-        :return: string
-        """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
-            }
-            return jwt.encode(
-                payload,
-                key,
-                algorithm='HS256'
-            )
-        except Exception as err:
-            return err
 
     def __repr__(self):
         return '<User %r>' %self.name
@@ -97,26 +85,6 @@ class Qt(db.Model):
 
     # challenges : qt = 1 : N
     challenges_id = db.Column(db.Integer, db.ForeignKey('challenges.id')) #, nullable=False)
-
-    # def __init__(self,
-    #             # id,
-    #             blog_url,
-    #             title,
-    #             contents):
-    #             # created_at,
-    #             # updated_at,
-    #             # user_id,
-    #             # comments_id,
-    #             # challenges_id):
-    #     # self.id = id
-    #     self.blog_url = blog_url
-    #     self.title = title
-    #     self.contents = contents
-    #     # self.created_at = created_at
-    #     # self.updated_at = updated_at
-    #     # self.user_id = user_id
-    #     # self.comments_id = comments_id
-    #     # self.challenges_id = challenges_id
 
 
     def __repr__(self):
@@ -185,7 +153,7 @@ class Budget(db.Model):
 
 
 class Donation(db.Model):
-    __tablename = 'donation'
+    __tablename__ = 'donation'
 
     id = db.Column(db.Integer, primary_key=True)
     mount = db.Column(db.Integer)
@@ -196,3 +164,12 @@ class Donation(db.Model):
 
     # budget : donation = 1 : N
     budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))#, nullable=False)
+
+
+class RefreshToken(db.Model):
+    __tablename__ = "refresh_token"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    
+    refresh = db.Column(db.String(500))

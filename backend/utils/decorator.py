@@ -1,7 +1,7 @@
 from functools import wraps
 from flask import request
 
-from service.auth_helper_service import Auth
+from api.service.auth_service import Auth
 
 def token_required(f):
     @wraps(f)

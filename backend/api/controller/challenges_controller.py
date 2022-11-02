@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Api, Resource, Namespace
 
-from service.challenges_service import get_all_challenges
+from api.service.challenges_service import get_all_challenges
 from utils.dto import ChallengesDto
 
 api = ChallengesDto.api

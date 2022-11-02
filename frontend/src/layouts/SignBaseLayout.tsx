@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,6 +11,14 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import { ShowAlert } from 'utils/GlobalAlert';
+import { parseErrorMessage } from 'utils/Error';
+import { client } from 'api/client';
+
+interface signInReqDto {
+  email: string,
+  password: string,
+}
 
 function Copyright(props: any) {
   return (
@@ -25,14 +34,26 @@ function Copyright(props: any) {
 }
 
 export default function SignBaseLayout() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const showAlert = useContext(ShowAlert)
+
+  const [currentSignInReqDto, setCurrentSignInReqDto] = useState<signInReqDto>()
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    try {
+      const res = await client.post('/auth/login', currentSignInReqDto)
+      // console.log(res.data)
+    } catch (e) {
+      console.log(e)
+      showAlert(parseErrorMessage(e), "error")
+    }
   };
+
+  const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setCurrentSignInReqDto({ ...currentSignInReqDto!, email: event.target.value })
+
+  const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setCurrentSignInReqDto({ ...currentSignInReqDto!, password: event.target.value })
 
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
@@ -75,6 +96,8 @@ export default function SignBaseLayout() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={onChangeEmail}
+              value={currentSignInReqDto?.email ?? ""}
               autoFocus
             />
             <TextField
@@ -85,6 +108,8 @@ export default function SignBaseLayout() {
               label="Password"
               type="password"
               id="password"
+              onChange={onChangePassword}
+              value={currentSignInReqDto?.password ?? ""}
               autoComplete="current-password"
             />
             <FormControlLabel

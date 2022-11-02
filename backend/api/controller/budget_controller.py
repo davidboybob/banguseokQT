@@ -2,7 +2,7 @@ from bdb import BdbQuit
 from flask import request
 from flask_restx import Api, Resource, Namespace
 
-from service.budget_service import get_all_budget
+from api.service.budget_service import get_all_budget
 from utils.dto import BudgetDto
 
 api = BudgetDto.api

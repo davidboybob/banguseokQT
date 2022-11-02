@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Api, Resource, Namespace
 
-from service.donation_service import get_all_donation
+from api.service.donation_service import get_all_donation
 from utils.dto import DonationDto
 
 api = DonationDto.api

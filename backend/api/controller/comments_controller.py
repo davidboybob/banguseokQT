@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Api, Resource, Namespace
 
-from service.commetns_service import get_all_comments
+from api.service.commetns_service import get_all_comments
 from utils.dto import CommentsDto
 
 api = CommentsDto.api

@@ -8,7 +8,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import * as themes from 'theme/Themes';
 import { useAppDistpatch, useAppSelector } from 'app/hooks';
 import { useState } from 'react';
-import GlobalAlert from 'utils/GlobalAlert';
+import GlobalAlert, { ShowAlert } from 'utils/GlobalAlert';
 
 function App() {
   // const count = useAppSelector((state) => state.counter.value)
@@ -27,13 +27,15 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={themes.theme}>
-      {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
-      <CssBaseline />
-      {content}
-      <GlobalAlert isOpen={isOpenAlert} type={alertType} message={alertMessage} onClickCloseButton={onClickAlertCloseButton} />
-      {/* </LocalizationProvider> */}
-    </ThemeProvider>
+    <ShowAlert.Provider value={showAlert}>
+      <ThemeProvider theme={themes.theme}>
+        {/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
+        <CssBaseline />
+        {content}
+        <GlobalAlert isOpen={isOpenAlert} type={alertType} message={alertMessage} onClickCloseButton={onClickAlertCloseButton} />
+        {/* </LocalizationProvider> */}
+      </ThemeProvider>
+    </ShowAlert.Provider>
   );
 }
 

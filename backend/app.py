@@ -1,7 +1,10 @@
+from datetime import datetime, timedelta, timezone
 from statistics import mode
 from flask import Blueprint, Flask, jsonify
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt, get_jwt_identity, set_access_cookies
 from flask_sqlalchemy import SQLAlchemy
-from config import config
+from utils.global_error_handler import create_error_handler
+from config.config import CONFIG
 from flask_restx import Api, Resource
 from flask_bcrypt import Bcrypt
 
@@ -28,30 +31,51 @@ def create_app():
             )
 
     
-    from api.user_controller import api as user_namespace
-    from api.qt_controller import api as qt_namespace
-    from api.comments_controller import api as comments_namespace
-    from api.challenges_controller import api as challenges_namespace
-    from api.budget_controller import api as budget_namespace
-    from api.donation_controller import api as donation_namespace
-    from api.auth_controller import api as auth_namespace
+    from api.controller.user_controller import api as user_namespace
+    from api.controller.qt_controller import api as qt_namespace
+    from api.controller.comments_controller import api as comments_namespace
+    from api.controller.challenges_controller import api as challenges_namespace
+    from api.controller.budget_controller import api as budget_namespace
+    from api.controller.donation_controller import api as donation_namespace
+    from api.controller.auth_controller import api as auth_namespace
 
     base_api = "/api/v1"
 
-    api.add_namespace(user_namespace, path='%s/user' %base_api)
-    api.add_namespace(qt_namespace, path='%s/qt' %base_api)
-    api.add_namespace(comments_namespace, path='%s/comments' %base_api)
-    api.add_namespace(challenges_namespace, path='%s/challenges' %base_api)
-    api.add_namespace(budget_namespace, path='%s/budget' %base_api)
-    api.add_namespace(donation_namespace, path='%s/donation' %base_api)
-    api.add_namespace(auth_namespace)
-
+    api.add_namespace(user_namespace, path=f'{base_api}/user')
+    api.add_namespace(qt_namespace, path=f'{base_api}/qt')
+    api.add_namespace(comments_namespace, path=f'{base_api}/comments')
+    api.add_namespace(challenges_namespace, path=f'{base_api}/challenges')
+    api.add_namespace(budget_namespace, path=f'{base_api}/budget')
+    api.add_namespace(donation_namespace, path=f'{base_api}/donation')
+    api.add_namespace(auth_namespace, path=f'{base_api}/auth')
+    create_error_handler(api)
     # app.config.from_object(Config)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + config.Config.dbfile + "?charset=utf-8"
-    # print(app.config)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + CONFIG.dbfile + "?charset=utf-8"
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = config.Config.SECRET_KEY
+    app.config['SECRET_KEY'] = CONFIG.SECRET_KEY
+    # jwt Token Config
+    app.config['JWT_SECRET_KEY'] = CONFIG.SECRET_KEY
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = CONFIG.expired_time_access_token
+    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = CONFIG.expired_time_refresh_token
+
+    jwt = JWTManager(app)
+    # jwt 검증
+    @app.after_request
+    def refresh_expiring_jwts(response):
+        try:
+            print(get_jwt())
+            exp_timestamp = get_jwt()["exp"]
+            print(exp_timestamp)
+            now = datetime.now(timezone.utc)
+            target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+            if target_timestamp > exp_timestamp:
+                access_token = create_access_token(identity=get_jwt_identity())
+                set_access_cookies(response, access_token)
+            return response
+        except (RuntimeError, KeyError):
+            # Case where there is not a valid JWT. Just return the original response
+            return response
 
     # DB 만들기
     from models import models
@@ -60,51 +84,15 @@ def create_app():
     db.init_app(app)
     flask_bcrypt.init_app(app)
     db.app = app
-
-    # Init Marshmallow
-    # ma = Marshmallow(app)
-
-    # class UserSchema(ma.SQLAlchemyAutoSchema):
-    #     class Meta:
-    #         # print(dir(db))
-    #         model = User
-    #         include_fk = True
-    #         # fields = ('email', 'name', 'password')
-
-
-    # class QtSchema(ma.SQLAlchemyAutoSchema):
-    #     class Meta:
-    #         model = Qt
-            # include_fk = True
-
-
     
     db.create_all()
-
-    # user_schema = UserSchema()
-    # users_schema = UserSchema(many=True)
-    # qt_schema = QtSchema()
-    # user = User(name='sjpark', email='sjpark@naver.com', password='12341234')
-    # qt = Qt(title='test', user_id=0)
-    # db.session.add(user)
-    # db.session.commit()
-    # user_schema.dump(user)
-
-    # @app.route("/api/users", methods=["GET"])
-    # def get_users():
-    #     all_users = User.query.all()
-    #     result = users_schema.dump(all_users)
-    #     print(result)
-    #     return result[0]
 
     app.register_blueprint(api_blueprint)
 
     return app
 
 
-
 if __name__ == "__main__":
     app = create_app()
-    CORS(app)
     app.run(host='0.0.0.0', port=5001, debug=True)
      

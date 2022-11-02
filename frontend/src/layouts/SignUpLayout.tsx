@@ -27,7 +27,7 @@ export default function SignUpLayout() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      client.post("")
+      client.post("/user/", currentSignUpReqDto)
     } catch (e) {
       showAlert(parseErrorMessage(e), "error")
     }

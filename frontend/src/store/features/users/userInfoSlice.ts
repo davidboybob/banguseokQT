@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { createSlice } from "@reduxjs/toolkit";
 
-import { RootState } from "app/store";
+import { RootState } from "store/store";
 import { fetchGetUserInfo } from "./fetchUserInfo";
 import { UserInfo } from "./userInfoTypes";
 

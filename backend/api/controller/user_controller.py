@@ -3,7 +3,7 @@ from flask import request
 from flask_jwt_extended import create_access_token
 from flask_restx import Api, Resource, Namespace
 from api.service.user_service import get_a_user, get_all_users, save_new_user, delete_a_user
-from utils.dto import UserDto
+from api.dto.user_dto import UserDto
 
 from utils.decorator import token_required, admin_token_required
 

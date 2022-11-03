@@ -4,22 +4,28 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 import jwt
 from config.config import CONFIG
 from models.models import RefreshToken
-from utils.utils import res_object, save_changes
+from utils.utils import res_object, save_changes, update_changes
 
 
 class JwtToken:
     @staticmethod
     def save_new_refresh_tokens(refresh_token, user_id):
-        new_refresh = RefreshToken(
-                        refresh=refresh_token,
-                        user_id=user_id
-                    )
-        save_changes(new_refresh)
-    
+        exists_refresh_token = RefreshToken.query.filter_by(
+            user_id=user_id).first()
+        exists_refresh_token.refresh = refresh_token
+        if not exists_refresh_token:
+            new_refresh = RefreshToken(
+                refresh=refresh_token,
+                user_id=user_id
+            )
+            save_changes(new_refresh)
+        else:
+            update_changes()
+
     @classmethod
     def create_tokens(cls, user_id):
-        access_token=create_access_token(identity=user_id, fresh=True)
-        refresh_token=create_refresh_token(identity=user_id)
+        access_token = create_access_token(identity=user_id, fresh=True)
+        refresh_token = create_refresh_token(identity=user_id)
         tokens = {'accees_token': access_token, 'refresh_token': refresh_token}
         cls.save_new_refresh_tokens(refresh_token, user_id)
         return res_object('success', 'Create access,refresh tokens.', 201, tokens)

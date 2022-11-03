@@ -3,7 +3,7 @@ from flask import request
 from flask_restx import Api, Resource, Namespace
 
 from api.service.budget_service import get_all_budget
-from utils.dto import BudgetDto
+from api.dto.budget_dto import BudgetDto
 
 api = BudgetDto.api
 _budget = BudgetDto.budget

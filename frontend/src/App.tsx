@@ -1,12 +1,10 @@
 import { useRoutes } from 'react-router-dom';
 import router from './router';
-
 import LocalizationProvider from '@mui/x-date-pickers/LocalizationProvider';
-
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import * as themes from 'theme/Themes';
-import { useAppDistpatch, useAppSelector } from 'app/hooks';
+import { useAppDistpatch, useAppSelector } from 'store/hooks/hooks';
 import { useState } from 'react';
 import GlobalAlert, { ShowAlert } from 'utils/GlobalAlert';
 

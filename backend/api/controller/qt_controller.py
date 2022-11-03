@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Api, Resource, Namespace
 
 from api.service.qt_service import get_all_qts, save_new_qt, get_a_qt
-from utils.dto import QtDto
+from api.dto.qt_dto import QtDto
 
 api = QtDto.api
 _qt = QtDto.qt

@@ -60,22 +60,7 @@ def create_app():
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = CONFIG.expired_time_refresh_token
 
     jwt = JWTManager(app)
-    # jwt 검증
-    @app.after_request
-    def refresh_expiring_jwts(response):
-        try:
-            print(get_jwt())
-            exp_timestamp = get_jwt()["exp"]
-            print(exp_timestamp)
-            now = datetime.now(timezone.utc)
-            target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
-            if target_timestamp > exp_timestamp:
-                access_token = create_access_token(identity=get_jwt_identity())
-                set_access_cookies(response, access_token)
-            return response
-        except (RuntimeError, KeyError):
-            # Case where there is not a valid JWT. Just return the original response
-            return response
+
 
     # DB 만들기
     from models import models

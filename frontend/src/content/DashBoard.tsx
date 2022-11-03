@@ -1,10 +1,10 @@
 import { Box, Grid } from "@mui/material";
 
-import { useAppDistpatch, useAppSelector } from 'app/hooks';
+import { useAppDistpatch, useAppSelector } from 'store/hooks/hooks';
 import { useEffect } from 'react';
-import { fetchGetUserInfo } from 'features/users/fetchUserInfo';
-import { selectUserInfo } from 'features/users/userInfoSlice';
-import { UserInfo } from 'features/users/userInfoTypes';
+import { fetchGetUserInfo } from 'store/features/users/fetchUserInfo';
+import { selectUserInfo } from 'store/features/users/userInfoSlice';
+import { UserInfo } from 'store/features/users/userInfoTypes';
 
 import UserInfoData from 'components/userInfo';
 import CurrentStatusBoard from 'components/Dashboard/CurrentStatusBoard';

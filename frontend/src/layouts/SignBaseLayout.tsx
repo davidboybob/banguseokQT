@@ -14,18 +14,14 @@ import Typography from '@mui/material/Typography';
 import { ShowAlert } from 'utils/GlobalAlert';
 import { parseErrorMessage } from 'utils/Error';
 import { client } from 'api/client';
-
-interface signInReqDto {
-  email: string,
-  password: string,
-}
+import { signInReqDto } from 'utils/dto/auth_dto';
 
 function Copyright(props: any) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        Mooksang Univ
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

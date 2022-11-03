@@ -3,6 +3,16 @@ from flask import request
 
 from api.service.auth_service import Auth
 
+def refresh_token_verified(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        verified, status = Auth.verified_refresh_token(request)
+        if not verified:
+            return verified, status
+        return f(*args, **kwargs)
+    return decorated
+
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):

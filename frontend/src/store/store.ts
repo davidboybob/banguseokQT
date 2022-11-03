@@ -1,11 +1,12 @@
 import { configureStore , ThunkAction, Action} from '@reduxjs/toolkit';
-import userInfoReducer from 'features/users/userInfoSlice';
+import userInfoReducer from 'store/features/users/userInfoSlice';
 
 
 export const store = configureStore({
   reducer: {
     userInfo: userInfoReducer
   }
+        
 });
 
 export  type RootState = ReturnType<typeof store.getState>;
